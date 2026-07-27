@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Md Siddiq Ali | Illustrator & Visual Artist</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Editorial Serif and Clean Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- React & Babel for Single-File Reactive UI -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        gallery: {
+                            // Warm Minimalist Cream Theme
+                            cream: '#fbfaf7',
+                            charcoal: '#1a1a1a',
+                            darkbg: '#121212',
+                            borderLight: '#eae8e3',
+                            borderDark: '#2a2a2a',
+                            accent: '#af7c44', // Elegant warm ochre/gold
+                            accentHover: '#8e6233'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Fine-art Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .light ::-webkit-scrollbar-thumb {
+            background: #eae8e3;
+            border-radius: 3px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #2a2a2a;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #af7c44;
+        }
+
+        /* Smooth page Transitions */
+        .fade-enter {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        .fade-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 400ms, transform 400ms;
+        }
+
+        /* Grid transition and spacing */
+        .grid-item {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Image hover reveal effect */
+        .hover-reveal-container {
+            position: relative;
+            overflow: hidden;
+        }
+        .hover-reveal-image {
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+        }
+        .hover-reveal-container:hover .hover-reveal-image-detail {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        .hover-reveal-container:hover .hover-reveal-image-base {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body class="bg-gallery-cream text-gallery-charcoal font-sans antialiased selection:bg-gallery-accent selection:text-white transition-colors duration-300">
+
+    <!-- React App Root Container -->
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- MOCK WORKS DATA (Reflecting Zach's Moody, Textured Charcoal & Editorial Portrait Styles) ---
+        const PORTFOLIO_WORKS = [
+            {
+                id: 1,
+                title: "The Anatomy of Solitude",
+                category: "editorial",
+                client: "The New York Times",
+                year: "2025",
+                medium: "Charcoal, Pastel & Fine Graphite",
+                size: "18\" x 24\"",
+                image: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=1200&auto=format&fit=crop&q=80",
+                description: "An editorial piece commissioned for the NYT Sunday Review, exploring the complex mental landscapes of modern isolation. The texture blends traditional heavy charcoal strokes with digital ambient lighting to capture psychological weight."
+            },
+            {
+                id: 2,
+                title: "Silent Symphony of Portland",
+                category: "portraiture",
+                client: "Adweek Magazine",
+                year: "2025",
+                medium: "Pencil & Digital Mixed Media",
+                size: "16\" x 20\"",
+                image: "https://images.unsplash.com/photo-1579783928621-7a13d66a62d1?w=1200&auto=format&fit=crop&q=80",
+                description: "Part of a portrait series profiling creative visionaries navigating the changing landscape of urban environments. Emphasizes fine-line detailing with warm, emotional underlayers."
+            },
+            {
+                id: 3,
+                title: "The Surrealist's Sorrow",
+                category: "narrative",
+                client: "HarperCollins Books",
+                year: "2024",
+                medium: "Oil, Textured Charcoal on Board",
+                size: "20\" x 24\"",
+                image: "https://images.unsplash.com/photo-1580136579312-94651dfd596d?w=1200&auto=format&fit=crop&q=80",
+                description: "Book cover illustration for an anthology of dark-surreal poetry. Focuses on the physical weight of grief translated into detailed, dreamlike architecture."
+            },
+            {
+                id: 4,
+                title: "Whispers in the Dark Wood",
+                category: "personal",
+                client: "Fine Art Print Solo Gallery",
+                year: "2026",
+                medium: "Traditional Woodcut & Ink Wash",
+                size: "12\" x 16\"",
+                image: "https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?w=1200&auto=format&fit=crop&q=80",
+                description: "A personal exploration of traditional hand-etched woodblock techniques coupled with rich dark ink washes, focusing on folklore and mystical natural entities."
+            },
+            {
+                id: 5,
+                title: "The Digital Disconnect",
+                category: "editorial",
+                client: "Wired Magazine",
+                year: "2025",
+                medium: "Digital Painting & Textured Overlay",
+                size: "18\" x 24\"",
+                image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=1200&auto=format&fit=crop&q=80",
+                description: "An editorial illustration visualizing the subtle psychological separation experienced through constant virtual communication versus physical human connection."
+            },
+            {
+                id: 6,
+                title: "The Alchemist's Monologue",
+                category: "portraiture",
+                client: "Smithsonian Magazine",
+                year: "2024",
+                medium: "Pencil & Digital Color Gradient",
+                size: "15\" x 18\"",
+                image: "https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=1200&auto=format&fit=crop&q=80",
+                description: "A highly detailed historical portrait exploring the beautiful transition from magical superstition to rigorous scientific inquiry in medieval times."
+            },
+            {
+                id: 7,
+                title: "The Echo Chamber Paradox",
+                category: "narrative",
+                client: "The Los Angeles Times",
+                year: "2025",
+                medium: "Charcoal Dust & Gesso on Linen",
+                size: "24\" x 30\"",
+                image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1200&auto=format&fit=crop&q=80",
+                description: "Narrative illustration of modern echo chambers. Overlapping visual feedback loops are physically represented on canvas using heavy charcoal powder and hand-applied gesso."
+            },
+            {
+                id: 8,
+                title: "Fragments of Childhood Dreams",
+                category: "personal",
+                client: "Museum of Modern Art (MoMA) Showcase",
+                year: "2026",
+                medium: "Graphite Pencil & Gilded Gold Leaf",
+                size: "20\" x 20\"",
+                image: "https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=1200&auto=format&fit=crop&q=80",
+                description: "A personal project depicting the fluid, decaying nature of distant memories, accented with genuine hand-gilded 24k gold leaf details that shift under lighting."
+            }
+        ];
+
+        // --- SHOP ITEMS (Featuring Texture-Hover Preview Images) ---
+        const STORE_ITEMS = [
+            {
+                id: "item-1",
+                title: "The Anatomy of Solitude",
+                type: "Screen Print",
+                price: 85.00,
+                size: "18\" x 24\" Hand-Pulled",
+                image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&auto=format&fit=crop&q=80",
+                hoverImage: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=800&auto=format&fit=crop&q=80", // detailed close-up
+                description: "4-color hand-pulled screen print on 100lb acid-free French Paper. Signed, numbered, and dated in a limited edition of 100."
+            },
+            {
+                id: "item-2",
+                title: "Shadows of Portland",
+                type: "Fine Art Giclée Print",
+                price: 65.00,
+                size: "16\" x 20\" Archival Print",
+                image: "https://images.unsplash.com/photo-1579783928586-3f350c33659c?w=800&auto=format&fit=crop&q=80",
+                hoverImage: "https://images.unsplash.com/photo-1579783928621-7a13d66a62d1?w=800&auto=format&fit=crop&q=80",
+                description: "Archival pigment print on heavy museum-grade cotton rag paper. Fully authorized limited studio edition with certificate of authenticity."
+            },
+            {
+                id: "item-3",
+                title: "Whispers of the Wood (Vol. I)",
+                type: "Self-Published Comic & Zine",
+                price: 18.00,
+                size: "A5, 36 Pages, Perfect Bound",
+                image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=800&auto=format&fit=crop&q=80",
+                hoverImage: "https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?w=800&auto=format&fit=crop&q=80",
+                description: "A beautifully designed narrative compilation of dark fantasy sketches, folklore insights, and graphite experiments. Printed on custom high-texture recycled stock."
+            },
+            {
+                id: "item-4",
+                title: "Grief & Grace Skate Deck",
+                type: "Hand-Painted Hardwood Deck",
+                price: 240.00,
+                size: "8.25\" Premium Canadian Maple",
+                image: "https://images.unsplash.com/photo-1547447134-cd3f5c716030?w=800&auto=format&fit=crop&q=80",
+                hoverImage: "https://images.unsplash.com/photo-1580136579312-94651dfd596d?w=800&auto=format&fit=crop&q=80",
+                description: "A fully functional rideable skate deck or exquisite wall display. Features a hand-transferred design with beautiful protective matte finish. Hand-signed by Md Siddiq Ali."
+            }
+        ];
+
+        // --- STREAMING_CHUNK: Rendering the Main App Structure ---
+        function App() {
+            const [activeSection, setActiveSection] = useState('work'); // 'work', 'about', 'store', 'contact'
+            const [categoryFilter, setCategoryFilter] = useState('all');
+            const [selectedWork, setSelectedWork] = useState(null); // Lightbox State
+            const [cart, setCart] = useState([]);
+            const [isCartOpen, setIsCartOpen] = useState(false);
+            const [darkMode, setDarkMode] = useState(false);
+            const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+            // --- CONTACT FORM STATE ---
+            const [formSubmitted, setFormSubmitted] = useState(false);
+            const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
+
+            // --- CHECKOUT SIMULATOR STATE ---
+            const [checkoutStep, setCheckoutStep] = useState('cart'); // 'cart', 'shipping', 'payment', 'success'
+            const [couponCode, setCouponCode] = useState('');
+            const [discount, setDiscount] = useState(0);
+
+            // Toggle Dark Mode
+            useEffect(() => {
+                const root = window.document.documentElement;
+                if (darkMode) {
+                    root.classList.add('dark');
+                    root.classList.remove('light');
+                } else {
+                    root.classList.add('light');
+                    root.classList.remove('dark');
+                }
+            }, [darkMode]);
+
+            // Keyboard navigation for Lightbox
+            useEffect(() => {
+                const handleKeyDown = (e) => {
+                    if (!selectedWork) return;
+                    const filtered = getFilteredWorks();
+                    const currentIndex = filtered.findIndex(w => w.id === selectedWork.id);
+
+                    if (e.key === 'Escape') {
+                        setSelectedWork(null);
+                    } else if (e.key === 'ArrowRight') {
+                        const nextIndex = (currentIndex + 1) % filtered.length;
+                        setSelectedWork(filtered[nextIndex]);
+                    } else if (e.key === 'ArrowLeft') {
+                        const prevIndex = (currentIndex - 1 + filtered.length) % filtered.length;
+                        setSelectedWork(filtered[prevIndex]);
+                    }
+                };
+
+                window.addEventListener('keydown', handleKeyDown);
+                return () => window.removeEventListener('keydown', handleKeyDown);
+            }, [selectedWork, categoryFilter]);
+
+            const getFilteredWorks = () => {
+                if (categoryFilter === 'all') return PORTFOLIO_WORKS;
+                return PORTFOLIO_WORKS.filter(w => w.category === categoryFilter);
+            };
+
+            // Cart Actions
+            const addToCart = (product) => {
+                const existingItem = cart.find(item => item.id === product.id);
+                if (existingItem) {
+                    setCart(cart.map(item => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item));
+                } else {
+                    setCart([...cart, { ...product, quantity: 1 }]);
+                }
+                setIsCartOpen(true);
+            };
+
+            const removeFromCart = (id) => {
+                setCart(cart.filter(item => item.id !== id));
+            };
+
+            const updateCartQuantity = (id, delta) => {
+                setCart(cart.map(item => {
+                    if (item.id === id) {
+                        const newQty = item.quantity + delta;
+                        return newQty > 0 ? { ...item, quantity: newQty } : item;
+                    }
+                    return item;
+                }).filter(item => item.quantity > 0));
+            };
+
+            const applyCoupon = () => {
+                if (couponCode.toUpperCase() === 'ARTIST10') {
+                    setDiscount(0.10); // 10% off
+                } else {
+                    setDiscount(0);
+                }
+            };
+
+            const handleContactSubmit = (e) => {
+                e.preventDefault();
+                setFormSubmitted(true);
+                setTimeout(() => {
+                    setFormData({ name: '', email: '', subject: '', message: '' });
+                }, 500);
+            };
+
+            const totalCartItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+            const cartSubtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+            const finalTotal = cartSubtotal - (cartSubtotal * discount);
+
+            return (
+                <div className={`min-h-screen ${darkMode ? 'bg-gallery-darkbg text-gray-200' : 'bg-gallery-cream text-gallery-charcoal'} flex flex-col md:flex-row transition-colors duration-300`}>
+                    
+                    {/* --- MOBILE STICKY NAVIGATION BAR --- */}
+                    <header className={`md:hidden sticky top-0 z-40 flex items-center justify-between px-6 py-4 border-b ${darkMode ? 'bg-gallery-darkbg/95 border-gallery-borderDark' : 'bg-gallery-cream/95 border-gallery-borderLight'} backdrop-blur-md`}>
+                        <div>
+                            <span onClick={() => { setActiveSection('work'); setCategoryFilter('all'); }} className="font-serif text-xl font-bold tracking-tight cursor-pointer">
+                                Md Siddiq Ali
+                            </span>
+                            <span className="block text-[10px] uppercase tracking-widest text-gallery-accent mt-0.5 font-medium">Illustrator</span>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                            {/* Theme Toggle */}
+                            <button onClick={() => setDarkMode(!darkMode)} className="p-2 rounded-full focus:outline-none hover:bg-gallery-accent/10 transition-colors">
+                                <i className={`fa-solid ${darkMode ? 'fa-sun text-yellow-400' : 'fa-moon text-gallery-accent'}`}></i>
+                            </button>
+                            {/* Shopping Cart Indicator */}
+                            <button onClick={() => setIsCartOpen(true)} className="relative p-2 rounded-full hover:bg-gallery-accent/10 transition-colors">
+                                <i className="fa-solid fa-shopping-bag"></i>
+                                {totalCartItems > 0 && (
+                                    <span className="absolute top-0 right-0 w-4 h-4 bg-gallery-accent text-white rounded-full text-[9px] flex items-center justify-center font-bold">
+                                        {totalCartItems}
+                                    </span>
+                                )}
+                            </button>
+                            {/* Menu Button */}
+                            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 text-xl focus:outline-none">
+                                <i className={`fa-solid ${isMobileMenuOpen ? 'fa-xmark' : 'fa-bars'}`}></i>
+                            </button>
+                        </div>
+                    </header>
+
+                    {/* --- MOBILE MENU OVERLAY --- */}
+                    {isMobileMenuOpen && (
+                        <div className={`md:hidden fixed inset-0 top-[65px] z-30 flex flex-col p-8 space-y-6 ${darkMode ? 'bg-gallery-darkbg/98 text-white' : 'bg-gallery-cream/98 text-gallery-charcoal'} animate-fade`}>
+                            <nav className="flex flex-col space-y-4 text-lg font-medium">
+                                <button 
+                                    onClick={() => { setActiveSection('work'); setCategoryFilter('all'); setIsMobileMenuOpen(false); }}
+                                    className={`text-left pb-1 border-b ${activeSection === 'work' ? 'text-gallery-accent border-gallery-accent' : 'border-transparent'}`}
+                                >
+                                    Work
+                                </button>
+                                <div className="pl-4 flex flex-col space-y-2 text-sm text-gray-500">
+                                    {['all', 'editorial', 'portraiture', 'narrative', 'personal'].map((cat) => (
+                                        <button 
+                                            key={cat}
+                                            onClick={() => { setActiveSection('work'); setCategoryFilter(cat); setIsMobileMenuOpen(false); }}
+                                            className={`text-left capitalize ${categoryFilter === cat && activeSection === 'work' ? 'text-gallery-accent font-semibold' : ''}`}
+                                        >
+                                            {cat}
+                                        </button>
+                                    ))}
+                                </div>
+                                <button 
+                                    onClick={() => { setActiveSection('about'); setIsMobileMenuOpen(false); }}
+                                    className={`text-left pb-1 border-b ${activeSection === 'about' ? 'text-gallery-accent border-gallery-accent' : 'border-transparent'}`}
+                                >
+                                    About
+                                </button>
+                                <button 
+                                    onClick={() => { setActiveSection('store'); setIsMobileMenuOpen(false); }}
+                                    className={`text-left pb-1 border-b ${activeSection === 'store' ? 'text-gallery-accent border-gallery-accent' : 'border-transparent'}`}
+                                >
+                                    Store
+                                </button>
+                                <button 
+                                    onClick={() => { setActiveSection('contact'); setIsMobileMenuOpen(false); }}
+                                    className={`text-left pb-1 border-b ${activeSection === 'contact' ? 'text-gallery-accent border-gallery-accent' : 'border-transparent'}`}
+                                >
+                                    Contact
+                                </button>
+                            </nav>
+
+                            <div className="flex space-x-6 pt-6 border-t border-gray-200 dark:border-gallery-borderDark">
+                                <a href="https://instagram.com" target="_blank" className="hover:text-gallery-accent transition-colors text-xl"><i className="fa-brands fa-instagram"></i></a>
+                                <a href="https://behance.net" target="_blank" className="hover:text-gallery-accent transition-colors text-xl"><i className="fa-brands fa-behance"></i></a>
+                                <a href="mailto:siddiq@illustration.com" className="hover:text-gallery-accent transition-colors text-xl"><i className="fa-regular fa-envelope"></i></a>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* --- STREAMING_CHUNK: Styling and Rendering Sidebar --- */}
+                    {/* --- DESKTOP SIDEBAR --- */}
+                    <aside className={`hidden md:flex flex-col justify-between w-[280px] h-screen fixed left-0 top-0 p-10 border-r transition-colors duration-300 ${darkMode ? 'bg-[#0f0f0f] border-gallery-borderDark' : 'bg-gallery-cream border-gallery-borderLight'}`}>
+                        {/* Header & Logo */}
+                        <div className="space-y-10">
+                            <div>
+                                <h1 onClick={() => { setActiveSection('work'); setCategoryFilter('all'); }} className="font-serif text-[28px] font-bold leading-tight tracking-tight cursor-pointer hover:text-gallery-accent transition-colors">
+                                    Md Siddiq Ali
+                                </h1>
+                                <p className="text-[11px] uppercase tracking-widest text-gallery-accent font-semibold mt-1">
+                                    Illustrator & Visual Artist
+                                </p>
+                            </div>
+
+                            {/* Main Navigation */}
+                            <nav className="flex flex-col space-y-3 text-[14px]">
+                                <div className="space-y-1">
+                                    <button 
+                                        onClick={() => { setActiveSection('work'); }} 
+                                        className={`font-semibold tracking-wider hover:text-gallery-accent transition-colors ${activeSection === 'work' ? 'text-gallery-accent' : ''}`}
+                                    >
+                                        WORK
+                                    </button>
+                                    
+                                    {/* Nested Category Filter */}
+                                    <div className="pl-3 py-1 flex flex-col space-y-1.5 border-l border-gallery-accent/20">
+                                        {['all', 'editorial', 'portraiture', 'narrative', 'personal'].map((cat) => (
+                                            <button 
+                                                key={cat}
+                                                onClick={() => { setActiveSection('work'); setCategoryFilter(cat); }}
+                                                className={`text-left text-[12px] capitalize hover:text-gallery-accent transition-all ${
+                                                    activeSection === 'work' && categoryFilter === cat 
+                                                    ? 'text-gallery-accent font-semibold translate-x-1' 
+                                                    : 'text-gray-500 dark:text-gray-400'
+                                                }`}
+                                            >
+                                                {cat}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <button 
+                                    onClick={() => setActiveSection('about')} 
+                                    className={`text-left font-semibold tracking-wider hover:text-gallery-accent transition-colors pt-2 ${activeSection === 'about' ? 'text-gallery-accent' : ''}`}
+                                >
+                                    ABOUT & CLIENTS
+                                </button>
+
+                                <button 
+                                    onClick={() => setActiveSection('store')} 
+                                    className={`text-left font-semibold tracking-wider hover:text-gallery-accent transition-colors ${activeSection === 'store' ? 'text-gallery-accent' : ''}`}
+                                >
+                                    STORE
+                                </button>
+
+                                <button 
+                                    onClick={() => setActiveSection('contact')} 
+                                    className={`text-left font-semibold tracking-wider hover:text-gallery-accent transition-colors ${activeSection === 'contact' ? 'text-gallery-accent' : ''}`}
+                                >
+                                    CONTACT
+                                </button>
+                            </nav>
+                        </div>
+
+                        {/* Sidebar Footer & Widgets */}
+                        <div className="space-y-6">
+                            {/* Dark Mode Switcher */}
+                            <div className="flex items-center space-x-2">
+                                <button 
+                                    onClick={() => setDarkMode(!darkMode)} 
+                                    className={`w-10 h-5 flex items-center rounded-full p-0.5 duration-300 cursor-pointer ${darkMode ? 'bg-gallery-accent' : 'bg-gray-300'}`}
+                                >
+                                    <div className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ${darkMode ? 'translate-x-5' : ''}`}></div>
+                                </button>
+                                <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                                    {darkMode ? 'Dark Light' : 'Minimal Light'}
+                                </span>
+                            </div>
+
+                            {/* Cart Indicator */}
+                            {totalCartItems > 0 && (
+                                <button onClick={() => setIsCartOpen(true)} className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-gallery-accent/10 border border-gallery-accent/20 hover:bg-gallery-accent/20 transition-all text-[12px] font-semibold text-gallery-accent">
+                                    <i className="fa-solid fa-shopping-bag"></i>
+                                    <span>CART ({totalCartItems})</span>
+                                </button>
+                            )}
+
+                            {/* Social Icons & Copyright */}
+                            <div className="space-y-2">
+                                <div className="flex space-x-4">
+                                    <a href="https://instagram.com" target="_blank" className="text-gray-500 hover:text-gallery-accent transition-colors text-sm"><i className="fa-brands fa-instagram"></i></a>
+                                    <a href="https://behance.net" target="_blank" className="text-gray-500 hover:text-gallery-accent transition-colors text-sm"><i className="fa-brands fa-behance"></i></a>
+                                    <a href="mailto:siddiq@illustration.com" className="text-gray-500 hover:text-gallery-accent transition-colors text-sm"><i className="fa-regular fa-envelope"></i></a>
+                                </div>
+                                <div className="text-[10px] text-gray-400 font-medium">
+                                    &copy; {new Date().getFullYear()} Md Siddiq Ali. <br/>All Rights Reserved.
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+
+                    {/* --- MAIN CONTENT AREA --- */}
+                    <main className="flex-1 md:ml-[280px] p-6 md:p-14 transition-all duration-300">
+                        
+                        {/* --- WORK VIEW --- */}
+                        {activeSection === 'work' && (
+                            <div className="animate-fade">
+                                <div className="mb-8 hidden md:flex items-center justify-between">
+                                    <span className="text-[11px] uppercase tracking-widest font-semibold text-gray-400">
+                                        Showing: <span className="text-gallery-accent">{categoryFilter}</span> collection
+                                    </span>
+                                </div>
+
+                                {/* Responsive Grid */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                                    {getFilteredWorks().map((work) => (
+                                        <div 
+                                            key={work.id} 
+                                            onClick={() => setSelectedWork(work)}
+                                            className="grid-item group cursor-pointer overflow-hidden rounded-lg relative"
+                                        >
+                                            <div className="aspect-[4/5] bg-gray-100 dark:bg-[#1a1a1a] relative overflow-hidden rounded-lg border border-transparent hover:border-gallery-accent/20 transition-all duration-300">
+                                                <img 
+                                                    src={work.image} 
+                                                    alt={work.title} 
+                                                    loading="lazy"
+                                                    className="w-full h-full object-cover transform duration-500 ease-out group-hover:scale-105"
+                                                    onError={(e) => {
+                                                        e.target.onerror = null;
+                                                        e.target.src = `https://placehold.co/600x750/af7c44/ffffff?text=${encodeURIComponent(work.title)}`;
+                                                    }}
+                                                />
+                                                {/* Sophisticated Hover Information Overlay */}
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 text-white">
+                                                    <p className="text-[10px] uppercase tracking-widest text-gallery-accent font-semibold mb-1">{work.client}</p>
+                                                    <h3 className="font-serif text-lg md:text-xl font-bold leading-tight">{work.title}</h3>
+                                                    <p className="text-[11px] text-gray-300 mt-2 font-medium"><i className="fa-solid fa-paintbrush mr-1.5"></i>{work.medium}</p>
+                                                </div>
+                                            </div>
+                                            {/* Static mobile subtitle details */}
+                                            <div className="mt-3 md:hidden">
+                                                <h4 className="font-serif text-base font-bold">{work.title}</h4>
+                                                <p className="text-[11px] text-gray-500 uppercase tracking-widest mt-0.5">{work.client} &bull; {work.year}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* --- STREAMING_CHUNK: About and Clients Section Setup --- */}
+                        {/* --- ABOUT & CLIENTS VIEW --- */}
+                        {activeSection === 'about' && (
+                            <div className="max-w-4xl mx-auto animate-fade space-y-12 md:space-y-16">
+                                <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-start">
+                                    {/* Artist Portrait */}
+                                    <div className="md:col-span-5">
+                                        <div className="aspect-[3/4] bg-gray-200 dark:bg-[#1e1e1e] rounded-lg overflow-hidden border border-gallery-borderLight dark:border-gallery-borderDark relative group">
+                                            <img 
+                                                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&auto=format&fit=crop&q=80" 
+                                                alt="Md Siddiq Ali portrait" 
+                                                className="w-full h-full object-cover object-center grayscale hover:grayscale-0 transition-all duration-700"
+                                                onError={(e) => {
+                                                    e.target.onerror = null;
+                                                    e.target.src = "https://placehold.co/400x533/af7c44/ffffff?text=Md+Siddiq+Ali";
+                                                }}
+                                            />
+                                            <div className="absolute inset-0 border-2 border-gallery-accent/20 m-3 rounded-md pointer-events-none"></div>
+                                        </div>
+                                    </div>
+
+                                    {/* Story and Bio */}
+                                    <div className="md:col-span-7 space-y-6">
+                                        <h2 className="font-serif text-3xl md:text-4xl font-bold tracking-tight">
+                                            Md Siddiq Ali
+                                        </h2>
+                                        <p className="text-[13px] uppercase tracking-widest text-gallery-accent font-bold">
+                                            Illustrator, Educator & Printmaker based in Portland, Oregon.
+                                        </p>
+                                        <p className="leading-relaxed text-sm md:text-base text-gray-600 dark:text-gray-300">
+                                            Md Siddiq Ali is an award-winning visual storyteller specializing in rich, highly-textured editorial illustrations and narrative visual concepts. Utilizing traditional media such as compressed charcoal, soft pastels, fine graphite, and manual woodblock printmaking alongside high-fidelity digital rendering, his works delve deeply into emotional realism, melancholy, and dreamlike surrealism.
+                                        </p>
+                                        <p className="leading-relaxed text-sm md:text-base text-gray-600 dark:text-gray-300">
+                                            He holds an MFA with Honors from the School of Visual Arts (SVA) and is currently directing advanced illustration coursework at the Pacific Northwest College of Art. His creative philosophy centers on bringing organic tactile sensations into digital editorial designs.
+                                        </p>
+                                        
+                                        <div className="pt-4 flex flex-wrap gap-4">
+                                            <button onClick={() => setActiveSection('contact')} className="px-5 py-2.5 rounded-md bg-gallery-accent text-white text-[12px] uppercase tracking-widest font-semibold hover:bg-gallery-accentHover transition-colors">
+                                                Inquire Commission
+                                            </button>
+                                            <a href="#cv-clients" className="px-5 py-2.5 rounded-md border border-gallery-accent/20 hover:border-gallery-accent hover:text-gallery-accent transition-all text-[12px] uppercase tracking-widest font-semibold">
+                                                Read Client List
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Clients Grid Block */}
+                                <div id="cv-clients" className="pt-8 border-t border-gallery-borderLight dark:border-gallery-borderDark space-y-8">
+                                    <h3 className="font-serif text-2xl font-bold">Select Clients</h3>
+                                    
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6 text-sm text-gray-600 dark:text-gray-400">
+                                        {[
+                                            "The New York Times", "Vogue Magazine", "Smithsonian Magazine", "HarperCollins",
+                                            "Playboy Enterprises", "The Los Angeles Times", "Wired Magazine", "Adweek",
+                                            "Rockstar Games", "Random House", "Penguin Books", "Pacific Northwest Art"
+                                        ].map((client, i) => (
+                                            <div key={i} className={`p-4 rounded-md border ${darkMode ? 'border-gallery-borderDark bg-[#161616]' : 'border-gallery-borderLight bg-white'} hover:border-gallery-accent/40 transition-colors flex items-center`}>
+                                                <span className="font-medium">{client}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Recognition Block */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-gallery-borderLight dark:border-gallery-borderDark">
+                                    <div className="space-y-4">
+                                        <h4 className="font-serif text-xl font-bold">Awards & Recognition</h4>
+                                        <ul className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
+                                            <li>&bull; <strong className="text-gallery-accent">Society of Illustrators</strong> - Gold Medal (2025)</li>
+                                            <li>&bull; <strong className="text-gallery-accent">American Illustration 43</strong> - Selected Winner (2024)</li>
+                                            <li>&bull; <strong className="text-gallery-accent">Communication Arts</strong> - Excellence in Illustration (2024)</li>
+                                            <li>&bull; <strong className="text-gallery-accent">MFA Illustration with Honors</strong> - School of Visual Arts (2023)</li>
+                                        </ul>
+                                    </div>
+                                    <div className="space-y-4">
+                                        <h4 className="font-serif text-xl font-bold">Lectures & Teachings</h4>
+                                        <ul className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
+                                            <li>&bull; <strong className="text-gallery-accent">PNCA</strong> - Adjunct Professor (Illustration & Comic Art)</li>
+                                            <li>&bull; <strong className="text-gallery-accent">SVA Summer Series</strong> - Guest Lecturer on Charcoal Techniques</li>
+                                            <li>&bull; <strong className="text-gallery-accent">Portland Art Museum</strong> - Visual Storytelling Workshop Leader</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* --- STREAMING_CHUNK: Setting Up the Interactive Shop View --- */}
+                        {/* --- STORE (SHOP) VIEW --- */}
+                        {activeSection === 'store' && (
+                            <div className="animate-fade space-y-10">
+                                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-gallery-borderLight dark:border-gallery-borderDark pb-6">
+                                    <div>
+                                        <h2 className="font-serif text-3xl font-bold">The Collector's Shop</h2>
+                                        <p className="text-[12px] text-gray-500 dark:text-gray-400 mt-1">Limited-run print editions, custom merchandise and hand-drawn publication works.</p>
+                                    </div>
+                                    <div className="flex items-center space-x-3 text-[12px] bg-gallery-accent/10 text-gallery-accent px-4 py-2 rounded-md border border-gallery-accent/20">
+                                        <i className="fa-solid fa-circle-info"></i>
+                                        <span>Apply promo <strong className="underline">ARTIST10</strong> at checkout for 10% off.</span>
+                                    </div>
+                                </div>
+
+                                {/* Store Items Grid */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8 md:gap-10">
+                                    {STORE_ITEMS.map((item) => (
+                                        <div 
+                                            key={item.id}
+                                            className="group flex flex-col justify-between"
+                                        >
+                                            {/* Double-Image Hover Reveal Container */}
+                                            <div className="hover-reveal-container aspect-[4/5] bg-gray-100 dark:bg-[#1a1a1a] rounded-lg overflow-hidden border border-gallery-borderLight dark:border-gallery-borderDark relative cursor-pointer shadow-sm">
+                                                {/* Normal Image */}
+                                                <img 
+                                                    src={item.image} 
+                                                    alt={item.title} 
+                                                    className="hover-reveal-image hover-reveal-image-base absolute inset-0 w-full h-full object-cover"
+                                                    onError={(e) => {
+                                                        e.target.onerror = null;
+                                                        e.target.src = `https://placehold.co/600x750/af7c44/ffffff?text=${encodeURIComponent(item.title)}`;
+                                                    }}
+                                                />
+                                                {/* Detailed Zoom-Hover Image */}
+                                                <img 
+                                                    src={item.hoverImage} 
+                                                    alt={`${item.title} detailed texture`} 
+                                                    className="hover-reveal-image hover-reveal-image-detail absolute inset-0 w-full h-full object-cover opacity-0"
+                                                    onError={(e) => {
+                                                        e.target.onerror = null;
+                                                        e.target.src = `https://placehold.co/600x750/1a1a1a/ffffff?text=Texture+Close+up`;
+                                                    }}
+                                                />
+                                                {/* Hover Detail Badge */}
+                                                <div className="absolute top-4 right-4 bg-black/70 text-white text-[9px] uppercase tracking-widest px-2 py-1 rounded-sm pointer-events-none group-hover:bg-gallery-accent duration-300">
+                                                    Hover for Texture Detail
+                                                </div>
+                                            </div>
+
+                                            {/* Details and Actions */}
+                                            <div className="mt-5 space-y-2">
+                                                <div className="flex items-start justify-between">
+                                                    <div>
+                                                        <h3 className="font-serif text-lg md:text-xl font-bold group-hover:text-gallery-accent transition-colors">
+                                                            {item.title}
+                                                        </h3>
+                                                        <p className="text-[11px] uppercase tracking-widest text-gray-500 font-semibold mt-0.5">
+                                                            {item.type} &bull; {item.size}
+                                                        </p>
+                                                    </div>
+                                                    <span className="font-serif text-lg font-bold text-gallery-accent">
+                                                        ${item.price.toFixed(2)}
+                                                    </span>
+                                                </div>
+                                                <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+                                                    {item.description}
+                                                </p>
+                                                <button 
+                                                    onClick={() => addToCart(item)}
+                                                    className="w-full mt-2 py-3 rounded-md bg-gallery-charcoal dark:bg-white text-white dark:text-gallery-charcoal text-[11px] font-semibold uppercase tracking-widest hover:bg-gallery-accent dark:hover:bg-gallery-accent dark:hover:text-white transition-colors duration-300 flex items-center justify-center space-x-2"
+                                                >
+                                                    <i className="fa-solid fa-shopping-cart text-[12px]"></i>
+                                                    <span>Add to cart</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* --- STREAMING_CHUNK: Setting Up the Interactive Contact Form --- */}
+                        {/* --- CONTACT VIEW --- */}
+                        {activeSection === 'contact' && (
+                            <div className="max-w-2xl mx-auto animate-fade space-y-10">
+                                <div>
+                                    <h2 className="font-serif text-3xl font-bold">Get in Touch</h2>
+                                    <p className="text-[12px] text-gray-500 dark:text-gray-400 mt-1">
+                                        For editorial commissions, gallery exhibits, or store-related help, please fill out the layout below.
+                                    </p>
+                                </div>
+
+                                {formSubmitted ? (
+                                    <div className="p-8 rounded-lg border border-emerald-500/20 bg-emerald-500/5 text-center space-y-4">
+                                        <div className="w-14 h-14 bg-emerald-500 text-white rounded-full flex items-center justify-center mx-auto text-xl shadow-md">
+                                            <i className="fa-solid fa-check"></i>
+                                        </div>
+                                        <h3 className="font-serif text-xl font-bold text-emerald-600 dark:text-emerald-400">Message Sent Successfully!</h3>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 max-w-md mx-auto">
+                                            Thank you for reaching out. Md Siddiq Ali will get back to you within 24-48 hours.
+                                        </p>
+                                        <button 
+                                            onClick={() => setFormSubmitted(false)} 
+                                            className="px-5 py-2 rounded-md bg-gallery-accent text-white text-[11px] uppercase tracking-widest font-semibold hover:bg-gallery-accentHover transition-colors mt-2"
+                                        >
+                                            Send Another Message
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <form onSubmit={handleContactSubmit} className="space-y-6">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                            <div className="space-y-1.5">
+                                                <label className="text-[10px] uppercase tracking-widest font-bold text-gray-400">Your Name *</label>
+                                                <input 
+                                                    type="text" 
+                                                    required
+                                                    value={formData.name}
+                                                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                                                    placeholder="Md Siddiq Ali"
+                                                    className={`w-full px-4 py-3 rounded-md text-sm border focus:outline-none focus:border-gallery-accent transition-colors ${
+                                                        darkMode ? 'bg-[#181818] border-gallery-borderDark text-white' : 'bg-white border-gallery-borderLight'
+                                                    }`}
+                                                />
+                                            </div>
+                                            <div className="space-y-1.5">
+                                                <label className="text-[10px] uppercase tracking-widest font-bold text-gray-400">Email Address *</label>
+                                                <input 
+                                                    type="email" 
+                                                    required
+                                                    value={formData.email}
+                                                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                                    placeholder="siddiq@example.com"
+                                                    className={`w-full px-4 py-3 rounded-md text-sm border focus:outline-none focus:border-gallery-accent transition-colors ${
+                                                        darkMode ? 'bg-[#181818] border-gallery-borderDark text-white' : 'bg-white border-gallery-borderLight'
+                                                    }`}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-1.5">
+                                            <label className="text-[10px] uppercase tracking-widest font-bold text-gray-400">Subject</label>
+                                            <input 
+                                                type="text" 
+                                                value={formData.subject}
+                                                onChange={(e) => setFormData({...formData, subject: e.target.value})}
+                                                placeholder="Editorial Commission Query"
+                                                className={`w-full px-4 py-3 rounded-md text-sm border focus:outline-none focus:border-gallery-accent transition-colors ${
+                                                    darkMode ? 'bg-[#181818] border-gallery-borderDark text-white' : 'bg-white border-gallery-borderLight'
+                                                }`}
+                                            />
+                                        </div>
+
+                                        <div className="space-y-1.5">
+                                            <div className="flex justify-between items-center">
+                                                <label className="text-[10px] uppercase tracking-widest font-bold text-gray-400">Message Content *</label>
+                                                <span className="text-[10px] text-gray-400">{formData.message.length}/1000 chars</span>
+                                            </div>
+                                            <textarea 
+                                                required
+                                                maxLength={1000}
+                                                rows={5}
+                                                value={formData.message}
+                                                onChange={(e) => setFormData({...formData, message: e.target.value})}
+                                                placeholder="Briefly describe your project details, budgets and deadlines..."
+                                                className={`w-full px-4 py-3 rounded-md text-sm border focus:outline-none focus:border-gallery-accent transition-colors ${
+                                                    darkMode ? 'bg-[#181818] border-gallery-borderDark text-white' : 'bg-white border-gallery-borderLight'
+                                                }`}
+                                            ></textarea>
+                                        </div>
+
+                                        <button 
+                                            type="submit"
+                                            className="w-full py-4 rounded-md bg-gallery-accent text-white text-[11px] font-semibold uppercase tracking-widest hover:bg-gallery-accentHover transition-colors duration-300"
+                                        >
+                                            Submit Message
+                                        </button>
+                                    </form>
+                                )}
+
+                                <div className="pt-8 border-t border-gallery-borderLight dark:border-gallery-borderDark flex flex-col sm:flex-row justify-between items-start gap-4">
+                                    <div>
+                                        <h4 className="font-serif font-bold text-base">Direct Contact Details</h4>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Email: <a href="mailto:siddiq@illustration.com" className="hover:text-gallery-accent transition-all font-semibold">siddiq@illustration.com</a></p>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">Phone: +1 (503) 489-0239 (Studio line)</p>
+                                    </div>
+                                    <div>
+                                        <h4 className="font-serif font-bold text-base">Studio Location</h4>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">981 Pearl Street, NW Pearl District</p>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">Portland, OR 97209</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </main>
+
+                    {/* --- STREAMING_CHUNK: Lightbox Artwork Modal Setup --- */}
+                    {/* --- IMMERSIVE LIGHTBOX / ARTWORK DETAIL VIEWER --- */}
+                    {selectedWork && (
+                        <div className="fixed inset-0 z-50 bg-black/95 backdrop-blur-sm flex flex-col justify-between p-6 md:p-10 text-white animate-fade">
+                            {/* Lightbox Header Controls */}
+                            <div className="flex justify-between items-center w-full">
+                                <div>
+                                    <span className="text-[10px] uppercase tracking-widest font-semibold text-gallery-accent">{selectedWork.client}</span>
+                                    <h3 className="font-serif text-lg font-bold">{selectedWork.title}</h3>
+                                </div>
+                                <button 
+                                    onClick={() => setSelectedWork(null)}
+                                    className="p-3 text-xl hover:text-gallery-accent transition-colors"
+                                >
+                                    <i className="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+
+                            {/* Main Slide / Image Detail Area */}
+                            <div className="flex-1 my-6 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 overflow-hidden">
+                                {/* Next/Prev Nav Arrow Desktop (Left) */}
+                                <button 
+                                    onClick={() => {
+                                        const filtered = getFilteredWorks();
+                                        const idx = filtered.findIndex(w => w.id === selectedWork.id);
+                                        const prevIdx = (idx - 1 + filtered.length) % filtered.length;
+                                        setSelectedWork(filtered[prevIdx]);
+                                    }}
+                                    className="hidden md:flex items-center justify-center w-12 h-12 rounded-full border border-white/20 hover:border-gallery-accent hover:text-gallery-accent transition-all duration-300"
+                                >
+                                    <i className="fa-solid fa-arrow-left"></i>
+                                </button>
+
+                                {/* Responsive Image Layout */}
+                                <div className="max-h-[60vh] md:max-h-[75vh] max-w-full md:max-w-[55%] rounded-lg overflow-hidden relative group">
+                                    <img 
+                                        src={selectedWork.image} 
+                                        alt={selectedWork.title} 
+                                        className="w-full h-full max-h-full object-contain mx-auto rounded-lg"
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.src = "https://placehold.co/600x750/af7c44/ffffff?text=Illustration+Art";
+                                        }}
+                                    />
+                                    {/* Touch Swipe Assist Hint */}
+                                    <div className="absolute inset-x-0 bottom-4 text-center md:hidden pointer-events-none opacity-60">
+                                        <span className="bg-black/50 px-3 py-1 text-[10px] uppercase tracking-widest rounded-full">Tap Sides to Navigate</span>
+                                    </div>
+                                    
+                                    {/* Mobile Invisible Tap Nav overlays */}
+                                    <div 
+                                        className="absolute left-0 top-0 bottom-0 w-1/2 cursor-w-resize md:hidden"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            const filtered = getFilteredWorks();
+                                            const idx = filtered.findIndex(w => w.id === selectedWork.id);
+                                            const prevIdx = (idx - 1 + filtered.length) % filtered.length;
+                                            setSelectedWork(filtered[prevIdx]);
+                                        }}
+                                    ></div>
+                                    <div 
+                                        className="absolute right-0 top-0 bottom-0 w-1/2 cursor-e-resize md:hidden"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            const filtered = getFilteredWorks();
+                                            const idx = filtered.findIndex(w => w.id === selectedWork.id);
+                                            const nextIdx = (idx + 1) % filtered.length;
+                                            setSelectedWork(filtered[nextIdx]);
+                                        }}
+                                    ></div>
+                                </div>
+
+                                {/* Next/Prev Nav Arrow Desktop (Right) */}
+                                <button 
+                                    onClick={() => {
+                                        const filtered = getFilteredWorks();
+                                        const idx = filtered.findIndex(w => w.id === selectedWork.id);
+                                        const nextIdx = (idx + 1) % filtered.length;
+                                        setSelectedWork(filtered[nextIdx]);
+                                    }}
+                                    className="hidden md:flex items-center justify-center w-12 h-12 rounded-full border border-white/20 hover:border-gallery-accent hover:text-gallery-accent transition-all duration-300"
+                                >
+                                    <i className="fa-solid fa-arrow-right"></i>
+                                </button>
+
+                                {/* Technical Specifications Card */}
+                                <div className="max-w-md w-full text-left space-y-4 bg-zinc-900/50 p-6 rounded-lg border border-white/5 overflow-y-auto max-h-[25vh] md:max-h-full">
+                                    <h4 className="font-serif text-xl font-bold tracking-tight border-b border-white/10 pb-2">Technical Specs</h4>
+                                    
+                                    <div className="grid grid-cols-2 gap-y-3 text-xs md:text-sm">
+                                        <div>
+                                            <span className="text-gray-400 block uppercase tracking-wider text-[9px]">Medium</span>
+                                            <span className="font-semibold">{selectedWork.medium}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-gray-400 block uppercase tracking-wider text-[9px]">Dimensions</span>
+                                            <span className="font-semibold">{selectedWork.size}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-gray-400 block uppercase tracking-wider text-[9px]">Publication / Client</span>
+                                            <span className="font-semibold">{selectedWork.client}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-gray-400 block uppercase tracking-wider text-[9px]">Year of Release</span>
+                                            <span className="font-semibold">{selectedWork.year}</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="pt-2">
+                                        <span className="text-gray-400 block uppercase tracking-wider text-[9px] mb-1">Concept narrative</span>
+                                        <p className="text-xs md:text-sm text-gray-300 leading-relaxed">
+                                            {selectedWork.description}
+                                        </p>
+                                    </div>
+
+                                    <div className="pt-4 flex space-x-3">
+                                        <button 
+                                            onClick={() => {
+                                                setSelectedWork(null);
+                                                setActiveSection('contact');
+                                            }}
+                                            className="flex-1 py-2 rounded bg-gallery-accent text-white text-[11px] font-semibold uppercase tracking-widest hover:bg-gallery-accentHover transition-colors flex items-center justify-center space-x-1.5"
+                                        >
+                                            <i className="fa-solid fa-envelope"></i>
+                                            <span>Licensing Inquiries</span>
+                                        </button>
+                                        <button 
+                                            onClick={() => {
+                                                setSelectedWork(null);
+                                                setActiveSection('store');
+                                            }}
+                                            className="px-4 py-2 rounded border border-white/20 hover:border-gallery-accent hover:text-gallery-accent transition-colors text-[11px] font-semibold uppercase tracking-widest"
+                                        >
+                                            Buy Print
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Slide Counter Footer */}
+                            <div className="text-center text-[11px] text-gray-400 font-semibold tracking-wider">
+                                USE ARROW KEYS TO NAVIGATE &bull; {getFilteredWorks().findIndex(w => w.id === selectedWork.id) + 1} OF {getFilteredWorks().length}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* --- STREAMING_CHUNK: Setting Up the Checkout & Cart Drawer --- */}
+                    {/* --- SHOPPING CART SLIDE OUT DRAWER --- */}
+                    {isCartOpen && (
+                        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex justify-end animate-fade">
+                            {/* Backdrop closer */}
+                            <div className="absolute inset-0 -z-10" onClick={() => setIsCartOpen(false)}></div>
+                            
+                            <div className={`w-full max-w-md h-full shadow-2xl flex flex-col justify-between p-6 md:p-8 ${darkMode ? 'bg-gallery-darkbg text-white' : 'bg-white text-gallery-charcoal'}`}>
+                                
+                                {/* Drawer Header */}
+                                <div className="flex items-center justify-between border-b pb-4">
+                                    <div className="flex items-center space-x-2">
+                                        <i className="fa-solid fa-shopping-bag text-lg text-gallery-accent"></i>
+                                        <h3 className="font-serif text-xl font-bold">Shopping Cart</h3>
+                                    </div>
+                                    <button 
+                                        onClick={() => { setIsCartOpen(false); setCheckoutStep('cart'); }}
+                                        className="p-2 hover:text-gallery-accent transition-colors"
+                                    >
+                                        <i className="fa-solid fa-xmark text-lg"></i>
+                                    </button>
+                                </div>
+
+                                {/* Dynamic Checkout Steps content */}
+                                {checkoutStep === 'cart' && (
+                                    <div className="flex-1 my-6 overflow-y-auto space-y-4">
+                                        {cart.length === 0 ? (
+                                            <div className="text-center py-20 space-y-4">
+                                                <i className="fa-solid fa-box-open text-4xl text-gray-300"></i>
+                                                <p className="text-sm text-gray-400 font-semibold uppercase tracking-wider">Your cart is empty.</p>
+                                                <button 
+                                                    onClick={() => { setIsCartOpen(false); setActiveSection('store'); }}
+                                                    className="px-4 py-2 bg-gallery-accent text-white rounded text-[10px] uppercase tracking-widest font-bold"
+                                                >
+                                                    Browse Shop
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            cart.map(item => (
+                                                <div key={item.id} className={`flex gap-4 p-3 rounded-lg border ${darkMode ? 'border-gallery-borderDark bg-zinc-900/40' : 'border-gallery-borderLight bg-gray-50'}`}>
+                                                    <div className="w-20 h-24 bg-gray-200 rounded overflow-hidden flex-shrink-0">
+                                                        <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                                                    </div>
+                                                    <div className="flex-1 flex flex-col justify-between">
+                                                        <div>
+                                                            <div className="flex justify-between items-start">
+                                                                <h4 className="font-serif font-bold text-sm md:text-base leading-tight">{item.title}</h4>
+                                                                <button onClick={() => removeFromCart(item.id)} className="text-gray-400 hover:text-rose-500 text-xs">
+                                                                    <i className="fa-regular fa-trash-can"></i>
+                                                                </button>
+                                                            </div>
+                                                            <span className="text-[10px] text-gray-500 block">{item.size}</span>
+                                                        </div>
+                                                        <div className="flex justify-between items-center">
+                                                            <div className="flex items-center space-x-2 border rounded px-2 py-0.5 scale-90 origin-left border-gray-300 dark:border-gallery-borderDark">
+                                                                <button onClick={() => updateCartQuantity(item.id, -1)} className="text-xs hover:text-gallery-accent"><i className="fa-solid fa-minus"></i></button>
+                                                                <span className="text-xs font-bold px-1">{item.quantity}</span>
+                                                                <button onClick={() => updateCartQuantity(item.id, 1)} className="text-xs hover:text-gallery-accent"><i className="fa-solid fa-plus"></i></button>
+                                                            </div>
+                                                            <span className="font-serif text-sm font-semibold text-gallery-accent">
+                                                                ${(item.price * item.quantity).toFixed(2)}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+                                )}
+
+                                {checkoutStep === 'shipping' && (
+                                    <div className="flex-1 my-6 overflow-y-auto space-y-4">
+                                        <h4 className="font-serif font-bold text-lg border-b pb-1">Shipping Details</h4>
+                                        <div className="space-y-3">
+                                            <input type="text" required placeholder="Full Name" className="w-full px-3 py-2 border rounded-md text-xs dark:bg-zinc-900 focus:outline-none focus:border-gallery-accent" />
+                                            <input type="text" required placeholder="Street Address" className="w-full px-3 py-2 border rounded-md text-xs dark:bg-zinc-900 focus:outline-none focus:border-gallery-accent" />
+                                            <div className="grid grid-cols-2 gap-3">
+                                                <input type="text" required placeholder="City" className="w-full px-3 py-2 border rounded-md text-xs dark:bg-zinc-900 focus:outline-none focus:border-gallery-accent" />
+                                                <input type="text" required placeholder="Postal Code" className="w-full px-3 py-2 border rounded-md text-xs dark:bg-zinc-900 focus:outline-none focus:border-gallery-accent" />
+                                            </div>
+                                            <input type="text" required placeholder="Country" defaultValue="United States" className="w-full px-3 py-2 border rounded-md text-xs dark:bg-zinc-900 focus:outline-none focus:border-gallery-accent" />
+                                        </div>
+                                    </div>
+                                )}
+
+                                {checkoutStep === 'payment' && (
+                                    <div className="flex-1 my-6 overflow-y-auto space-y-4">
+                                        <h4 className="font-serif font-bold text-lg border-b pb-1">Payment Simulation</h4>
+                                        <div className="p-4 rounded border border-yellow-500/20 bg-yellow-500/5 text-xs text-yellow-700 dark:text-yellow-400">
+                                            <i className="fa-solid fa-shield-halved mr-1.5"></i>
+                                            Secure Sandbox payment integration enabled. Feel free to use mock numbers.
+                                        </div>
+                                        <div className="space-y-3">
+                                            <input type="text" required maxLength={19} placeholder="Card Number (4111 2222 3333 4444)" className="w-full px-3 py-2 border rounded-md text-xs dark:bg-zinc-900 focus:outline-none focus:border-gallery-accent" />
+                                            <div className="grid grid-cols-2 gap-3">
+                                                <input type="text" required maxLength={5} placeholder="MM/YY" className="w-full px-3 py-2 border rounded-md text-xs dark:bg-zinc-900 focus:outline-none focus:border-gallery-accent" />
+                                                <input type="password" required maxLength={3} placeholder="CVV" className="w-full px-3 py-2 border rounded-md text-xs dark:bg-zinc-900 focus:outline-none focus:border-gallery-accent" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {checkoutStep === 'success' && (
+                                    <div className="flex-1 my-6 text-center py-10 space-y-4">
+                                        <div className="w-16 h-16 bg-emerald-500 text-white rounded-full flex items-center justify-center mx-auto text-2xl shadow-lg">
+                                            <i className="fa-solid fa-circle-check"></i>
+                                        </div>
+                                        <h3 className="font-serif text-2xl font-bold text-emerald-600 dark:text-emerald-400">Order Placed!</h3>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 max-w-sm mx-auto">
+                                            Your mock purchase went through successfully! Md Siddiq Ali will package and ship your custom items with full protection.
+                                        </p>
+                                    </div>
+                                )}
+
+                                {/* Summary & Actions Panel */}
+                                {checkoutStep !== 'success' && cart.length > 0 && (
+                                    <div className="border-t pt-4 space-y-4">
+                                        {/* Promo Code Input */}
+                                        {checkoutStep === 'cart' && (
+                                            <div className="flex gap-2">
+                                                <input 
+                                                    type="text" 
+                                                    placeholder="Coupon Code" 
+                                                    value={couponCode}
+                                                    onChange={(e) => setCouponCode(e.target.value)}
+                                                    className="flex-1 px-3 py-1.5 text-xs rounded border dark:bg-zinc-900 focus:outline-none" 
+                                                />
+                                                <button onClick={applyCoupon} className="px-3 py-1.5 bg-gallery-accent text-white text-[10px] font-bold uppercase rounded">
+                                                    Apply
+                                                </button>
+                                            </div>
+                                        )}
+
+                                        {/* Subtotal metrics */}
+                                        <div className="space-y-1.5 text-xs">
+                                            <div className="flex justify-between text-gray-500">
+                                                <span>Subtotal</span>
+                                                <span>${cartSubtotal.toFixed(2)}</span>
+                                            </div>
+                                            {discount > 0 && (
+                                                <div className="flex justify-between text-emerald-500 font-medium">
+                                                    <span>Discount (10% Off)</span>
+                                                    <span>-${(cartSubtotal * discount).toFixed(2)}</span>
+                                                </div>
+                                            )}
+                                            <div className="flex justify-between text-gray-500">
+                                                <span>Shipping & Customs</span>
+                                                <span className="font-semibold uppercase text-emerald-500">Free</span>
+                                            </div>
+                                            <div className="flex justify-between font-serif text-base font-bold border-t pt-1.5">
+                                                <span>Total Cost</span>
+                                                <span>${finalTotal.toFixed(2)}</span>
+                                            </div>
+                                        </div>
+
+                                        {/* Action Flow controller */}
+                                        {checkoutStep === 'cart' && (
+                                            <button 
+                                                onClick={() => setCheckoutStep('shipping')}
+                                                className="w-full py-3 bg-gallery-accent hover:bg-gallery-accentHover text-white text-xs font-bold uppercase tracking-widest rounded-md"
+                                            >
+                                                Proceed to Shipping
+                                            </button>
+                                        )}
+                                        {checkoutStep === 'shipping' && (
+                                            <div className="flex gap-2">
+                                                <button onClick={() => setCheckoutStep('cart')} className="px-4 py-3 border rounded text-xs">Back</button>
+                                                <button 
+                                                    onClick={() => setCheckoutStep('payment')}
+                                                    className="flex-1 py-3 bg-gallery-accent hover:bg-gallery-accentHover text-white text-xs font-bold uppercase tracking-widest rounded"
+                                                >
+                                                    Continue to Payment
+                                                </button>
+                                            </div>
+                                        )}
+                                        {checkoutStep === 'payment' && (
+                                            <div className="flex gap-2">
+                                                <button onClick={() => setCheckoutStep('shipping')} className="px-4 py-3 border rounded text-xs">Back</button>
+                                                <button 
+                                                    onClick={() => {
+                                                        setCheckoutStep('success');
+                                                        setCart([]);
+                                                    }}
+                                                    className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-widest rounded"
+                                                >
+                                                    Simulate Purchase
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {checkoutStep === 'success' && (
+                                    <button 
+                                        onClick={() => {
+                                            setIsCartOpen(false);
+                                            setCheckoutStep('cart');
+                                        }}
+                                        className="w-full py-3 bg-gallery-charcoal dark:bg-white text-white dark:text-gallery-charcoal text-xs font-bold uppercase tracking-widest rounded"
+                                    >
+                                        Back to Store
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
